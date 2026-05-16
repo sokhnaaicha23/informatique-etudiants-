@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InfoStudy — Plateforme Informatique Étudiants</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #111827;
+    --bg3: #1a2236;
+    --card: #151c2e;
+    --border: rgba(99,179,255,0.15);
+    --accent: #4f9eff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --accent5: #ef4444;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 10px; }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index: 1000;
+    background: rgba(10,14,26,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 64px;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 1.2rem;
+    color: var(--accent);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo span { color: var(--text2); }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--text2); text-decoration: none;
+    font-size: 0.85rem; letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent);
+    color: #0a0e1a;
+    border: none; padding: 0.5rem 1.2rem;
+    border-radius: 6px; cursor: pointer;
+    font-family: var(--sans); font-size: 0.85rem; font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+  .hamburger { display: none; flex-direction: column; gap:5px; cursor:pointer; }
+  .hamburger div { width:24px; height:2px; background:var(--text2); border-radius:2px; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 7rem 2rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(79,158,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,158,255,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(79,158,255,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    font-family: var(--mono); font-size: 0.75rem;
+    color: var(--accent); border: 1px solid rgba(79,158,255,0.3);
+    padding: 0.4rem 1rem; border-radius: 100px;
+    margin-bottom: 1.5rem; display: inline-block;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .hero h1 .hl1 { color: var(--accent); }
+  .hero h1 .hl2 { color: var(--accent3); }
+  .hero p {
+    font-family: var(--mono); font-size: 0.95rem;
+    color: var(--text2); max-width: 540px;
+    margin: 0 auto 2.5rem; line-height: 1.8;
+    position: relative;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; position: relative; }
+  .btn-primary {
+    background: var(--accent); color: #0a0e1a;
+    padding: 0.85rem 2rem; border-radius: 8px;
+    font-family: var(--sans); font-weight: 700; font-size: 0.95rem;
+    text-decoration: none; transition: transform 0.2s, opacity 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); opacity:0.9; }
+  .btn-outline {
+    border: 1px solid var(--border); color: var(--text2);
+    padding: 0.85rem 2rem; border-radius: 8px;
+    font-family: var(--sans); font-weight: 600; font-size: 0.95rem;
+    text-decoration: none; transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .stats-bar {
+    display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center;
+    margin-top: 4rem; position: relative;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent); display: block; }
+  .stat-lbl { font-family: var(--mono); font-size: 0.75rem; color: var(--text3); }
+
+  /* ── SECTIONS GÉNÉRIQUES ── */
+  section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-tag {
+    font-family: var(--mono); font-size: 0.75rem; color: var(--accent2);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 0.75rem; display: block;
+  }
+  h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; margin-bottom: 0.75rem; }
+  .section-sub { color: var(--text2); font-family: var(--mono); font-size: 0.9rem; margin-bottom: 3rem; max-width: 500px; }
+
+  /* ── MODULES GRID ── */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .module-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .module-card::before {
+    content: '';
+    position: absolute; top:0; left:0; right:0; height: 3px;
+    background: var(--c);
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .module-card:hover { transform: translateY(-4px); border-color: var(--c); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .module-card:hover::before { opacity: 1; }
+  .module-icon {
+    width: 48px; height: 48px; border-radius: 10px;
+    background: var(--ci);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1.2rem;
+  }
+  .module-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .module-card p { color: var(--text2); font-size: 0.875rem; line-height: 1.7; margin-bottom: 1.2rem; }
+  .module-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag {
+    font-family: var(--mono); font-size: 0.7rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text3); padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+  }
+  .module-arrow {
+    position: absolute; right: 1.5rem; top: 1.75rem;
+    color: var(--text3); font-size: 1.1rem;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .module-card:hover .module-arrow { color: var(--c); transform: translateX(4px); }
+
+  /* ── DETAIL PANEL ── */
+  .detail-panel {
+    display: none;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 1.5rem;
+    animation: slideDown 0.3s ease;
+  }
+  .detail-panel.open { display: block; }
+  @keyframes slideDown { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
+  .detail-panel h3 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent); }
+  .topics-list {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem; margin-bottom: 1.5rem;
+  }
+  .topic-item {
+    display: flex; align-items: flex-start; gap: 0.5rem;
+    font-size: 0.875rem; color: var(--text2);
+  }
+  .topic-item::before { content: '›'; color: var(--accent); flex-shrink: 0; }
+  .resources { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .resource-link {
+    font-family: var(--mono); font-size: 0.75rem;
+    background: rgba(79,158,255,0.1); color: var(--accent);
+    border: 1px solid rgba(79,158,255,0.2);
+    padding: 0.4rem 0.9rem; border-radius: 6px;
+    text-decoration: none; transition: background 0.2s;
+  }
+  .resource-link:hover { background: rgba(79,158,255,0.2); }
+
+  /* ── COURS HIGHLIGHTS ── */
+  .course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .course-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .course-card:hover { transform: translateY(-3px); }
+  .course-header {
+    padding: 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .course-body { padding: 0 1.25rem 1.25rem; }
+  .course-body p { color: var(--text2); font-size: 0.84rem; line-height: 1.6; margin-bottom: 0.75rem; }
+  .progress-bar {
+    height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; margin-bottom: 0.5rem;
+  }
+  .progress-fill { height: 100%; border-radius: 2px; background: var(--c); }
+  .progress-label { font-family: var(--mono); font-size: 0.7rem; color: var(--text3); }
+  .course-icon { font-size: 1.5rem; }
+  .course-name { font-size: 0.95rem; font-weight: 700; }
+  .course-level {
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--c); border: 1px solid var(--c);
+    padding: 0.15rem 0.5rem; border-radius: 4px; margin-left: auto;
+  }
+
+  /* ── QUIZ SECTION ── */
+  .quiz-container {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem; max-width: 680px; margin: 0 auto;
+  }
+  .quiz-q { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.6; }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .quiz-opt {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1rem 1.25rem;
+    cursor: pointer; font-size: 0.9rem;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .quiz-opt:hover { border-color: var(--accent); background: rgba(79,158,255,0.06); }
+  .quiz-opt.correct { border-color: var(--accent3); background: rgba(16,185,129,0.1); color: var(--accent3); }
+  .quiz-opt.wrong { border-color: var(--accent5); background: rgba(239,68,68,0.08); color: var(--accent5); }
+  .quiz-opt .opt-letter {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 0.75rem; flex-shrink:0;
+  }
+  .quiz-feedback {
+    display: none; padding: 1rem; border-radius: 8px;
+    font-family: var(--mono); font-size: 0.85rem; margin-bottom: 1rem;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(16,185,129,0.1); color: var(--accent3); border: 1px solid rgba(16,185,129,0.3); }
+  .quiz-feedback.ko { background: rgba(239,68,68,0.08); color: var(--accent5); border: 1px solid rgba(239,68,68,0.2); }
+  .quiz-nav { display: flex; gap: 1rem; align-items: center; justify-content: space-between; }
+  .quiz-counter { font-family: var(--mono); font-size: 0.8rem; color: var(--text3); }
+  .btn-quiz {
+    background: var(--accent); color: #0a0e1a;
+    border: none; padding: 0.65rem 1.5rem;
+    border-radius: 8px; cursor: pointer;
+    font-family: var(--sans); font-weight: 700; font-size: 0.85rem;
+    transition: opacity 0.2s;
+  }
+  .btn-quiz:hover { opacity: 0.85; }
+  .btn-quiz:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── CHEATSHEET ── */
+  .cheat-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .cheat-tab {
+    font-family: var(--mono); font-size: 0.8rem;
+    padding: 0.5rem 1rem; border-radius: 6px;
+    border: 1px solid var(--border); color: var(--text2);
+    cursor: pointer; transition: all 0.2s;
+    background: transparent;
+  }
+  .cheat-tab.active { background: var(--accent); color: #0a0e1a; border-color: var(--accent); font-weight: 700; }
+  .cheat-content { display: none; }
+  .cheat-content.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+  .cheat-block {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .cheat-block-header {
+    padding: 0.75rem 1rem; background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 0.8rem; color: var(--accent2);
+  }
+  .cheat-block pre {
+    padding: 1rem; font-family: var(--mono); font-size: 0.82rem;
+    color: var(--text2); line-height: 1.8; overflow-x: auto;
+    white-space: pre;
+  }
+  .cheat-block pre .kw { color: var(--accent); }
+  .cheat-block pre .fn { color: var(--accent3); }
+  .cheat-block pre .str { color: var(--accent4); }
+  .cheat-block pre .cm { color: var(--text3); }
+  .cheat-block pre .num { color: #f59e0b; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:2px; background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+  }
+  .tl-item { position:relative; margin-bottom: 2.5rem; }
+  .tl-dot {
+    position: absolute; left: -2.55rem; top:0.35rem;
+    width:12px; height:12px; border-radius:50%;
+    background: var(--c,var(--accent)); border: 2px solid var(--bg);
+  }
+  .tl-year { font-family: var(--mono); font-size: 0.75rem; color: var(--text3); margin-bottom: 0.3rem; }
+  .tl-item h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .tl-item p { font-size: 0.875rem; color: var(--text2); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  footer .logo { font-size: 1rem; }
+  footer p { font-family: var(--mono); font-size: 0.78rem; color: var(--text3); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-family: var(--mono); font-size: 0.78rem; color: var(--text3); text-decoration: none; }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ── SEARCH ── */
+  .search-bar {
+    display: flex; gap: 0.75rem; margin-bottom: 2rem; max-width: 500px;
+  }
+  .search-input {
+    flex:1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    font-family: var(--mono); font-size: 0.85rem; color: var(--text);
+    outline: none; transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--text3); }
+  .search-btn {
+    background: var(--accent); color: #0a0e1a;
+    border: none; padding: 0 1.25rem;
+    border-radius: 8px; cursor: pointer;
+    font-size: 1rem; transition: opacity 0.2s;
+  }
+  .search-btn:hover { opacity: 0.85; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav .nav-links, nav .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .topics-list { grid-template-columns: 1fr; }
+    .stats-bar { gap: 2rem; }
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in { opacity:0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+  .fade-in.visible { opacity:1; transform: none; }
+
+  /* ── SEPARATOR ── */
+  .full-sep { border:none; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="#" class="logo">&lt;<span>Info</span>Study/&gt;</a>
+  <ul class="nav-links">
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#cours">Cours</a></li>
+    <li><a href="#cheatsheet">Cheatsheet</a></li>
+    <li><a href="#quiz">Quiz</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+  </ul>
+  <a href="#modules" class="nav-cta">Commencer →</a>
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <span class="hero-badge">✦ Plateforme étudiants IT &amp; Télécoms</span>
+  <h1>Tout le programme<br><span class="hl1">informatique</span><br>en un seul endroit</h1>
+  <p>Réseaux, programmation, bases de données, systèmes d'exploitation, sécurité, développement web — maîtrisez chaque domaine avec des ressources claires et des exercices pratiques.</p>
+  <div class="hero-btns">
+    <a href="#modules" class="btn-primary">Explorer les modules</a>
+    <a href="#quiz" class="btn-outline">Tester mes connaissances</a>
+  </div>
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-num">12</span><span class="stat-lbl">Modules</span></div>
+    <div class="stat"><span class="stat-num">80+</span><span class="stat-lbl">Fiches de cours</span></div>
+    <div class="stat"><span class="stat-num">200+</span><span class="stat-lbl">Exercices</span></div>
+    <div class="stat"><span class="stat-num">∞</span><span class="stat-lbl">Ressources</span></div>
+  </div>
+</div>
+
+<!-- ── MODULES ── -->
+<section id="modules">
+  <span class="section-tag">// Curriculum complet</span>
+  <h2>Les modules du programme</h2>
+  <p class="section-sub">Cliquez sur un module pour voir le détail des cours et les ressources associées.</p>
+
+  <div class="search-bar">
+    <input class="search-input" id="searchInput" type="text" placeholder="Rechercher un module…" oninput="filterModules()">
+    <button class="search-btn" onclick="filterModules()">⌕</button>
+  </div>
+
+  <div class="modules-grid" id="modulesGrid">
+
+    <!-- RÉSEAUX -->
+    <div class="module-card" style="--c:#4f9eff; --ci:rgba(79,158,255,0.12)" onclick="toggleDetail('rsx')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">🌐</div>
+      <h3>Réseaux Informatiques</h3>
+      <p>Modèle OSI, protocoles TCP/IP, routage, commutation, Wi-Fi, VPN et administration réseau.</p>
+      <div class="module-tags">
+        <span class="tag">TCP/IP</span><span class="tag">OSI</span><span class="tag">Cisco</span><span class="tag">VLAN</span><span class="tag">DNS</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-rsx">
+      <h3>🌐 Réseaux Informatiques — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Modèle OSI (7 couches)</div>
+        <div class="topic-item">Protocoles TCP, UDP, IP</div>
+        <div class="topic-item">Adressage IPv4 / IPv6</div>
+        <div class="topic-item">Sous-réseaux et masques CIDR</div>
+        <div class="topic-item">Routage statique et dynamique (OSPF, BGP)</div>
+        <div class="topic-item">Commutation et VLAN</div>
+        <div class="topic-item">DNS, DHCP, NAT</div>
+        <div class="topic-item">Wi-Fi (802.11)</div>
+        <div class="topic-item">VPN et tunneling</div>
+        <div class="topic-item">Firewall et ACL</div>
+        <div class="topic-item">Wireshark (analyse trafic)</div>
+        <div class="topic-item">Packet Tracer / GNS3</div>
+      </div>
+      <div class="resources">
+        <a href="https://www.cisco.com/c/en/us/training-events/training-certifications/certifications/associate/ccna.html" target="_blank" class="resource-link">CCNA Cisco →</a>
+        <a href="https://www.ietf.org/rfc/rfc793.txt" target="_blank" class="resource-link">RFC TCP →</a>
+        <a href="https://www.networklessons.com" target="_blank" class="resource-link">NetworkLessons →</a>
+      </div>
+    </div>
+
+    <!-- PROGRAMMATION -->
+    <div class="module-card" style="--c:#7c3aed; --ci:rgba(124,58,237,0.12)" onclick="toggleDetail('prog')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">💻</div>
+      <h3>Programmation</h3>
+      <p>Algorithmique, Python, C/C++, Java, JavaScript — bases et avancé. Structures de données et complexité.</p>
+      <div class="module-tags">
+        <span class="tag">Python</span><span class="tag">C/C++</span><span class="tag">Java</span><span class="tag">Algo</span><span class="tag">POO</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-prog">
+      <h3>💻 Programmation — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Algorithmique et pseudo-code</div>
+        <div class="topic-item">Complexité O(n)</div>
+        <div class="topic-item">Structures de données (listes, arbres, graphes)</div>
+        <div class="topic-item">Programmation en C</div>
+        <div class="topic-item">C++ et POO</div>
+        <div class="topic-item">Python (bases → avancé)</div>
+        <div class="topic-item">Java (JVM, collections)</div>
+        <div class="topic-item">JavaScript (ES6+)</div>
+        <div class="topic-item">Récursivité</div>
+        <div class="topic-item">Tri et recherche</div>
+        <div class="topic-item">Gestion des exceptions</div>
+        <div class="topic-item">Tests unitaires</div>
+      </div>
+      <div class="resources">
+        <a href="https://cs50.harvard.edu" target="_blank" class="resource-link">CS50 Harvard →</a>
+        <a href="https://docs.python.org/fr/3/" target="_blank" class="resource-link">Doc Python →</a>
+        <a href="https://leetcode.com" target="_blank" class="resource-link">LeetCode →</a>
+      </div>
+    </div>
+
+    <!-- WEB -->
+    <div class="module-card" style="--c:#10b981; --ci:rgba(16,185,129,0.12)" onclick="toggleDetail('web')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">🖥️</div>
+      <h3>Développement Web</h3>
+      <p>HTML, CSS, JavaScript côté client et serveur. Frameworks modernes et déploiement.</p>
+      <div class="module-tags">
+        <span class="tag">HTML/CSS</span><span class="tag">JS</span><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">REST</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-web">
+      <h3>🖥️ Développement Web — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">HTML5 sémantique</div>
+        <div class="topic-item">CSS3, Flexbox, Grid</div>
+        <div class="topic-item">JavaScript (DOM, événements)</div>
+        <div class="topic-item">Responsive Design</div>
+        <div class="topic-item">React / Vue.js</div>
+        <div class="topic-item">Node.js et Express</div>
+        <div class="topic-item">API REST et JSON</div>
+        <div class="topic-item">Authentification JWT</div>
+        <div class="topic-item">Git et versioning</div>
+        <div class="topic-item">Déploiement (Netlify, Vercel)</div>
+        <div class="topic-item">HTTP / HTTPS</div>
+        <div class="topic-item">Accessibilité Web</div>
+      </div>
+      <div class="resources">
+        <a href="https://developer.mozilla.org/fr/" target="_blank" class="resource-link">MDN Web Docs →</a>
+        <a href="https://react.dev" target="_blank" class="resource-link">React.dev →</a>
+        <a href="https://roadmap.sh/frontend" target="_blank" class="resource-link">Frontend Roadmap →</a>
+      </div>
+    </div>
+
+    <!-- BDD -->
+    <div class="module-card" style="--c:#f59e0b; --ci:rgba(245,158,11,0.12)" onclick="toggleDetail('bdd')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">🗄️</div>
+      <h3>Bases de Données</h3>
+      <p>Modélisation relationnelle, SQL, bases NoSQL, transactions et optimisation.</p>
+      <div class="module-tags">
+        <span class="tag">SQL</span><span class="tag">MySQL</span><span class="tag">MongoDB</span><span class="tag">MCD/MLD</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-bdd">
+      <h3>🗄️ Bases de Données — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Modèle Entité-Association</div>
+        <div class="topic-item">MCD → MLD → MPD</div>
+        <div class="topic-item">SQL (SELECT, JOIN, GROUP BY)</div>
+        <div class="topic-item">Transactions et ACID</div>
+        <div class="topic-item">Index et optimisation</div>
+        <div class="topic-item">MySQL / PostgreSQL</div>
+        <div class="topic-item">NoSQL (MongoDB, Redis)</div>
+        <div class="topic-item">Normalisation (1NF → 3NF)</div>
+        <div class="topic-item">PL/SQL et procédures</div>
+        <div class="topic-item">Sauvegardes et sécurité BDD</div>
+        <div class="topic-item">ORM (Hibernate, SQLAlchemy)</div>
+        <div class="topic-item">Data Warehouse</div>
+      </div>
+      <div class="resources">
+        <a href="https://sql.sh" target="_blank" class="resource-link">SQL.sh →</a>
+        <a href="https://www.mongodb.com/docs/" target="_blank" class="resource-link">MongoDB Docs →</a>
+        <a href="https://pgexercises.com" target="_blank" class="resource-link">PG Exercises →</a>
+      </div>
+    </div>
+
+    <!-- SYSTÈMES -->
+    <div class="module-card" style="--c:#ef4444; --ci:rgba(239,68,68,0.12)" onclick="toggleDetail('sys')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">⚙️</div>
+      <h3>Systèmes d'exploitation</h3>
+      <p>Linux, gestion des processus, mémoire, fichiers, scripts shell et administration système.</p>
+      <div class="module-tags">
+        <span class="tag">Linux</span><span class="tag">Shell</span><span class="tag">Processus</span><span class="tag">Bash</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-sys">
+      <h3>⚙️ Systèmes d'Exploitation — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Architecture d'un OS</div>
+        <div class="topic-item">Gestion des processus</div>
+        <div class="topic-item">Threads et concurrence</div>
+        <div class="topic-item">Mémoire virtuelle, pagination</div>
+        <div class="topic-item">Système de fichiers</div>
+        <div class="topic-item">Linux (commandes, arborescence)</div>
+        <div class="topic-item">Script Bash / Shell</div>
+        <div class="topic-item">Cron, services systemd</div>
+        <div class="topic-item">Permissions (chmod, chown)</div>
+        <div class="topic-item">Virtualisation (VirtualBox, Docker)</div>
+        <div class="topic-item">SSH et administration distante</div>
+        <div class="topic-item">Ordonnancement CPU</div>
+      </div>
+      <div class="resources">
+        <a href="https://linuxcommand.org" target="_blank" class="resource-link">Linux Command →</a>
+        <a href="https://docs.docker.com" target="_blank" class="resource-link">Docker Docs →</a>
+        <a href="https://explainshell.com" target="_blank" class="resource-link">ExplainShell →</a>
+      </div>
+    </div>
+
+    <!-- SÉCURITÉ -->
+    <div class="module-card" style="--c:#06b6d4; --ci:rgba(6,182,212,0.12)" onclick="toggleDetail('sec')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">🔐</div>
+      <h3>Cybersécurité</h3>
+      <p>Cryptographie, attaques, défense, OWASP Top 10, sécurité réseau et ethical hacking.</p>
+      <div class="module-tags">
+        <span class="tag">Crypto</span><span class="tag">OWASP</span><span class="tag">Pentest</span><span class="tag">SSL/TLS</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-sec">
+      <h3>🔐 Cybersécurité — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Cryptographie symétrique/asymétrique</div>
+        <div class="topic-item">PKI et certificats SSL/TLS</div>
+        <div class="topic-item">OWASP Top 10</div>
+        <div class="topic-item">Injection SQL, XSS, CSRF</div>
+        <div class="topic-item">Pentest (Kali Linux, nmap)</div>
+        <div class="topic-item">Firewall, IDS/IPS</div>
+        <div class="topic-item">Hachage (SHA, MD5)</div>
+        <div class="topic-item">VPN et SSH</div>
+        <div class="topic-item">Social engineering</div>
+        <div class="topic-item">RGPD et conformité</div>
+        <div class="topic-item">Forensics numériques</div>
+        <div class="topic-item">CTF (Capture The Flag)</div>
+      </div>
+      <div class="resources">
+        <a href="https://owasp.org" target="_blank" class="resource-link">OWASP →</a>
+        <a href="https://tryhackme.com" target="_blank" class="resource-link">TryHackMe →</a>
+        <a href="https://portswigger.net/web-security" target="_blank" class="resource-link">PortSwigger →</a>
+      </div>
+    </div>
+
+    <!-- TÉLÉCOMS -->
+    <div class="module-card" style="--c:#8b5cf6; --ci:rgba(139,92,246,0.12)" onclick="toggleDetail('tel')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">📡</div>
+      <h3>Télécommunications</h3>
+      <p>Signaux, modulation, réseaux mobiles (2G–5G), fibre optique et protocoles télécom.</p>
+      <div class="module-tags">
+        <span class="tag">5G</span><span class="tag">GSM</span><span class="tag">Fibre</span><span class="tag">VoIP</span><span class="tag">SDH</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-tel">
+      <h3>📡 Télécommunications — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Signaux analogiques et numériques</div>
+        <div class="topic-item">Modulation (AM, FM, QAM)</div>
+        <div class="topic-item">Multiplexage (FDM, TDM, OFDM)</div>
+        <div class="topic-item">Réseaux GSM/GPRS/3G/4G/5G</div>
+        <div class="topic-item">Architecture cœur réseau</div>
+        <div class="topic-item">Fibre optique (FTTH, GPON)</div>
+        <div class="topic-item">VoIP (SIP, RTP)</div>
+        <div class="topic-item">SDH/SONET, MPLS</div>
+        <div class="topic-item">Antennes et propagation</div>
+        <div class="topic-item">Satellite et WiMAX</div>
+        <div class="topic-item">QoS et ToS</div>
+        <div class="topic-item">IMS et NGN</div>
+      </div>
+      <div class="resources">
+        <a href="https://www.3gpp.org" target="_blank" class="resource-link">3GPP →</a>
+        <a href="https://www.itu.int/fr/pages/default.aspx" target="_blank" class="resource-link">ITU →</a>
+      </div>
+    </div>
+
+    <!-- GÉNIE LOGICIEL -->
+    <div class="module-card" style="--c:#ec4899; --ci:rgba(236,72,153,0.12)" onclick="toggleDetail('gl')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">📐</div>
+      <h3>Génie Logiciel</h3>
+      <p>UML, conception orientée objet, design patterns, méthodologies Agile et DevOps.</p>
+      <div class="module-tags">
+        <span class="tag">UML</span><span class="tag">Scrum</span><span class="tag">Design Patterns</span><span class="tag">Git</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-gl">
+      <h3>📐 Génie Logiciel — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Cycle de vie du logiciel</div>
+        <div class="topic-item">Diagrammes UML (cas d'usage, classe, séquence)</div>
+        <div class="topic-item">Merise</div>
+        <div class="topic-item">Design Patterns (GoF)</div>
+        <div class="topic-item">SOLID, DRY, KISS</div>
+        <div class="topic-item">Méthodes Agile / Scrum</div>
+        <div class="topic-item">Git, GitHub, GitLab</div>
+        <div class="topic-item">CI/CD (GitHub Actions)</div>
+        <div class="topic-item">Tests (unitaires, intégration)</div>
+        <div class="topic-item">Documentation technique</div>
+        <div class="topic-item">DevOps et containerisation</div>
+        <div class="topic-item">Revues de code</div>
+      </div>
+      <div class="resources">
+        <a href="https://refactoring.guru/fr/design-patterns" target="_blank" class="resource-link">Design Patterns →</a>
+        <a href="https://learngitbranching.js.org/?locale=fr_FR" target="_blank" class="resource-link">Learn Git →</a>
+      </div>
+    </div>
+
+    <!-- MATHÉMATIQUES -->
+    <div class="module-card" style="--c:#84cc16; --ci:rgba(132,204,22,0.12)" onclick="toggleDetail('math')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">🧮</div>
+      <h3>Mathématiques Informatiques</h3>
+      <p>Algèbre booléenne, logique, théorie des graphes, probabilités et statistiques.</p>
+      <div class="module-tags">
+        <span class="tag">Booléen</span><span class="tag">Graphes</span><span class="tag">Proba</span><span class="tag">Logique</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-math">
+      <h3>🧮 Mathématiques Informatiques — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Algèbre booléenne</div>
+        <div class="topic-item">Logique propositionnelle et prédicats</div>
+        <div class="topic-item">Théorie des ensembles</div>
+        <div class="topic-item">Théorie des graphes</div>
+        <div class="topic-item">Arithmétique modulaire</div>
+        <div class="topic-item">Combinatoire et dénombrement</div>
+        <div class="topic-item">Probabilités et statistiques</div>
+        <div class="topic-item">Algèbre linéaire (matrices)</div>
+        <div class="topic-item">Automates et langages formels</div>
+        <div class="topic-item">Cryptographie mathématique</div>
+      </div>
+      <div class="resources">
+        <a href="https://www.khanacademy.org/computing/computer-science" target="_blank" class="resource-link">Khan Academy →</a>
+      </div>
+    </div>
+
+    <!-- CLOUD & VIRTUALISATION -->
+    <div class="module-card" style="--c:#0ea5e9; --ci:rgba(14,165,233,0.12)" onclick="toggleDetail('cloud')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">☁️</div>
+      <h3>Cloud & Virtualisation</h3>
+      <p>AWS, Azure, Docker, Kubernetes — infrastructure cloud moderne et microservices.</p>
+      <div class="module-tags">
+        <span class="tag">AWS</span><span class="tag">Docker</span><span class="tag">K8s</span><span class="tag">IaaS</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-cloud">
+      <h3>☁️ Cloud & Virtualisation — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Modèles IaaS, PaaS, SaaS</div>
+        <div class="topic-item">AWS (EC2, S3, RDS, Lambda)</div>
+        <div class="topic-item">Azure et GCP</div>
+        <div class="topic-item">Docker (images, conteneurs)</div>
+        <div class="topic-item">Docker Compose</div>
+        <div class="topic-item">Kubernetes (pods, services)</div>
+        <div class="topic-item">Virtualisation (VMware, VirtualBox)</div>
+        <div class="topic-item">Terraform (IaC)</div>
+        <div class="topic-item">Serverless</div>
+        <div class="topic-item">CDN et load balancing</div>
+        <div class="topic-item">Monitoring (Prometheus, Grafana)</div>
+      </div>
+      <div class="resources">
+        <a href="https://aws.amazon.com/fr/training/" target="_blank" class="resource-link">AWS Training →</a>
+        <a href="https://docs.docker.com" target="_blank" class="resource-link">Docker →</a>
+        <a href="https://kubernetes.io/fr/docs/home/" target="_blank" class="resource-link">K8s Docs →</a>
+      </div>
+    </div>
+
+    <!-- INTELLIGENCE ARTIFICIELLE -->
+    <div class="module-card" style="--c:#a855f7; --ci:rgba(168,85,247,0.12)" onclick="toggleDetail('ia')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">🤖</div>
+      <h3>Intelligence Artificielle</h3>
+      <p>Machine learning, deep learning, traitement de données et modèles prédictifs.</p>
+      <div class="module-tags">
+        <span class="tag">ML</span><span class="tag">Python</span><span class="tag">Neural Net</span><span class="tag">Data</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-ia">
+      <h3>🤖 Intelligence Artificielle — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Apprentissage supervisé / non supervisé</div>
+        <div class="topic-item">Régression et classification</div>
+        <div class="topic-item">Arbres de décision, Random Forest</div>
+        <div class="topic-item">Réseaux de neurones</div>
+        <div class="topic-item">Deep Learning (CNN, RNN)</div>
+        <div class="topic-item">NumPy, Pandas, Matplotlib</div>
+        <div class="topic-item">Scikit-learn</div>
+        <div class="topic-item">TensorFlow / PyTorch</div>
+        <div class="topic-item">NLP (traitement du texte)</div>
+        <div class="topic-item">Évaluation de modèles</div>
+        <div class="topic-item">Big Data et Spark</div>
+        <div class="topic-item">Éthique en IA</div>
+      </div>
+      <div class="resources">
+        <a href="https://course.fast.ai" target="_blank" class="resource-link">fast.ai →</a>
+        <a href="https://www.deeplearning.ai" target="_blank" class="resource-link">DeepLearning.ai →</a>
+        <a href="https://kaggle.com" target="_blank" class="resource-link">Kaggle →</a>
+      </div>
+    </div>
+
+    <!-- BUREAUTIQUE & OUTILS -->
+    <div class="module-card" style="--c:#f97316; --ci:rgba(249,115,22,0.12)" onclick="toggleDetail('out')">
+      <span class="module-arrow">→</span>
+      <div class="module-icon">🛠️</div>
+      <h3>Outils & Bureautique</h3>
+      <p>Suite Office, LaTeX, outils de collaboration, gestion de projet et productivité.</p>
+      <div class="module-tags">
+        <span class="tag">Word</span><span class="tag">Excel</span><span class="tag">LaTeX</span><span class="tag">Notion</span>
+      </div>
+    </div>
+    <div class="detail-panel" id="detail-out">
+      <h3>🛠️ Outils & Bureautique — Détail</h3>
+      <div class="topics-list">
+        <div class="topic-item">Microsoft Word (rapports, mémoires)</div>
+        <div class="topic-item">Excel (formules, tableaux croisés)</div>
+        <div class="topic-item">PowerPoint (présentations)</div>
+        <div class="topic-item">LaTeX (documents scientifiques)</div>
+        <div class="topic-item">Google Workspace</div>
+        <div class="topic-item">Notion et Obsidian</div>
+        <div class="topic-item">Trello / Jira</div>
+        <div class="topic-item">Figma (prototypage UI)</div>
+        <div class="topic-item">VS Code et extensions</div>
+        <div class="topic-item">Postman (test API)</div>
+        <div class="topic-item">Gestion du temps</div>
+        <div class="topic-item">Rédaction de CV et lettres</div>
+      </div>
+      <div class="resources">
+        <a href="https://www.overleaf.com/learn" target="_blank" class="resource-link">Overleaf LaTeX →</a>
+        <a href="https://support.microsoft.com/fr-fr/excel" target="_blank" class="resource-link">Support Excel →</a>
+      </div>
+    </div>
+
+  </div><!-- /modules-grid -->
+</section>
+
+<hr class="full-sep">
+
+<!-- ── COURS HIGHLIGHTS ── -->
+<section id="cours">
+  <span class="section-tag">// Par niveau</span>
+  <h2>Cours mis en avant</h2>
+  <p class="section-sub">Une sélection de cours essentiels triés par niveau de difficulté.</p>
+
+  <div class="course-grid">
+    <div class="course-card fade-in" style="--c:#4f9eff">
+      <div class="course-header">
+        <span class="course-icon">📶</span>
+        <span class="course-name">Modèle OSI en profondeur</span>
+        <span class="course-level">Débutant</span>
+      </div>
+      <div class="course-body">
+        <p>Comprendre les 7 couches, leur rôle et les protocoles associés à chaque niveau.</p>
+        <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+        <span class="progress-label">Popularité : 85%</span>
+      </div>
+    </div>
+    <div class="course-card fade-in" style="--c:#7c3aed">
+      <div class="course-header">
+        <span class="course-icon">🐍</span>
+        <span class="course-name">Python de zéro à héros</span>
+        <span class="course-level">Débutant</span>
+      </div>
+      <div class="course-body">
+        <p>Variables, boucles, fonctions, POO, fichiers et bibliothèques standard Python.</p>
+        <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
+        <span class="progress-label">Popularité : 92%</span>
+      </div>
+    </div>
+    <div class="course-card fade-in" style="--c:#10b981">
+      <div class="course-header">
+        <span class="course-icon">🗃️</span>
+        <span class="course-name">SQL Maîtrise complète</span>
+        <span class="course-level">Intermédiaire</span>
+      </div>
+      <div class="course-body">
+        <p>Jointures, sous-requêtes, index, vues, procédures stockées et optimisation.</p>
+        <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+        <span class="progress-label">Popularité : 78%</span>
+      </div>
+    </div>
+    <div class="course-card fade-in" style="--c:#f59e0b">
+      <div class="course-header">
+        <span class="course-icon">🐧</span>
+        <span class="course-name">Linux Administration</span>
+        <span class="course-level">Intermédiaire</span>
+      </div>
+      <div class="course-body">
+        <p>Commandes essentielles, gestion des utilisateurs, scripts Bash, services et logs.</p>
+        <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+        <span class="progress-label">Popularité : 70%</span>
+      </div>
+    </div>
+    <div class="course-card fade-in" style="--c:#ef4444">
+      <div class="course-header">
+        <span class="course-icon">🔒</span>
+        <span class="course-name">Cryptographie appliquée</span>
+        <span class="course-level">Avancé</span>
+      </div>
+      <div class="course-body">
+        <p>RSA, AES, ECDSA, PKI, TLS, signatures numériques et implémentation pratique.</p>
+        <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+        <span class="progress-label">Popularité : 55%</span>
+      </div>
+    </div>
+    <div class="course-card fade-in" style="--c:#06b6d4">
+      <div class="course-header">
+        <span class="course-icon">🐳</span>
+        <span class="course-name">Docker &amp; Kubernetes</span>
+        <span class="course-level">Avancé</span>
+      </div>
+      <div class="course-body">
+        <p>Conteneurisation, orchestration, déploiement cloud-native et microservices.</p>
+        <div class="progress-bar"><div class="progress-fill" style="width:63%"></div></div>
+        <span class="progress-label">Popularité : 63%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- ── CHEATSHEETS ── -->
+<section id="cheatsheet">
+  <span class="section-tag">// Fiches mémoire</span>
+  <h2>Cheatsheets Interactives</h2>
+  <p class="section-sub">Les commandes et syntaxes essentielles à portée de main.</p>
+
+  <div class="cheat-tabs">
+    <button class="cheat-tab active" onclick="switchTab('linux')">Linux</button>
+    <button class="cheat-tab" onclick="switchTab('python')">Python</button>
+    <button class="cheat-tab" onclick="switchTab('sql')">SQL</button>
+    <button class="cheat-tab" onclick="switchTab('git')">Git</button>
+    <button class="cheat-tab" onclick="switchTab('reseau')">Réseau</button>
+  </div>
+
+  <div class="cheat-content active" id="tab-linux">
+    <div class="cheat-block">
+      <div class="cheat-block-header">Navigation fichiers</div>
+      <pre><span class="kw">ls</span> -la          <span class="cm"># lister avec détails</span>
+<span class="kw">cd</span> /home/user   <span class="cm"># changer répertoire</span>
+<span class="kw">pwd</span>             <span class="cm"># répertoire courant</span>
+<span class="kw">mkdir</span> dossier   <span class="cm"># créer dossier</span>
+<span class="kw">rm</span> -rf dossier  <span class="cm"># supprimer</span>
+<span class="kw">cp</span> src dest     <span class="cm"># copier</span>
+<span class="kw">mv</span> src dest     <span class="cm"># déplacer/renommer</span></pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Processus & Système</div>
+      <pre><span class="kw">ps</span> aux          <span class="cm"># voir les processus</span>
+<span class="kw">kill</span> -9 PID     <span class="cm"># tuer un processus</span>
+<span class="kw">top</span>             <span class="cm"># moniteur système</span>
+<span class="kw">htop</span>            <span class="cm"># moniteur amélioré</span>
+<span class="kw">df</span> -h           <span class="cm"># espace disque</span>
+<span class="kw">free</span> -h         <span class="cm"># mémoire RAM</span>
+<span class="kw">uname</span> -a        <span class="cm"># info système</span></pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Réseau & Permissions</div>
+      <pre><span class="kw">chmod</span> 755 fic   <span class="cm"># droits fichier</span>
+<span class="kw">chown</span> u:g fic   <span class="cm"># propriétaire</span>
+<span class="kw">ifconfig</span>        <span class="cm"># interfaces réseau</span>
+<span class="kw">ping</span> 8.8.8.8    <span class="cm"># tester connexion</span>
+<span class="kw">ssh</span> u@host      <span class="cm"># connexion SSH</span>
+<span class="kw">scp</span> fic u@host: <span class="cm"># copier via SSH</span>
+<span class="kw">netstat</span> -tulnp  <span class="cm"># ports ouverts</span></pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Recherche & Fichiers texte</div>
+      <pre><span class="kw">grep</span> -r mot .   <span class="cm"># chercher dans fichiers</span>
+<span class="kw">find</span> / -name f  <span class="cm"># trouver fichier</span>
+<span class="kw">cat</span> fichier     <span class="cm"># afficher</span>
+<span class="kw">less</span> fichier    <span class="cm"># paginer</span>
+<span class="kw">head</span> -n 20 f   <span class="cm"># 20 premières lignes</span>
+<span class="kw">tail</span> -f log    <span class="cm"># suivre logs en direct</span>
+<span class="kw">wc</span> -l fichier  <span class="cm"># compter les lignes</span></pre>
+    </div>
+  </div>
+
+  <div class="cheat-content" id="tab-python">
+    <div class="cheat-block">
+      <div class="cheat-block-header">Structures de base</div>
+      <pre><span class="cm"># Listes</span>
+lst = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+lst.<span class="fn">append</span>(<span class="num">4</span>)
+lst.<span class="fn">pop</span>()
+
+<span class="cm"># Dictionnaires</span>
+d = {<span class="str">'clé'</span>: <span class="str">'val'</span>}
+d.<span class="fn">get</span>(<span class="str">'clé'</span>, <span class="str">'défaut'</span>)
+
+<span class="cm"># Tuple, Set</span>
+t = (<span class="num">1</span>, <span class="num">2</span>)   s = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}</pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Fonctions & Classes</div>
+      <pre><span class="kw">def</span> <span class="fn">ma_fonction</span>(a, b=<span class="num">0</span>):
+    <span class="kw">return</span> a + b
+
+<span class="cm"># Lambda</span>
+f = <span class="kw">lambda</span> x: x**<span class="num">2</span>
+
+<span class="kw">class</span> <span class="fn">Animal</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, nom):
+        <span class="kw">self</span>.nom = nom
+    <span class="kw">def</span> <span class="fn">parler</span>(<span class="kw">self</span>):
+        <span class="kw">pass</span></pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Compréhensions & Itérations</div>
+      <pre><span class="cm"># Compréhension liste</span>
+carres = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
+
+<span class="cm"># Filtrage</span>
+pairs = [x <span class="kw">for</span> x <span class="kw">in</span> lst <span class="kw">if</span> x%<span class="num">2</span>==<span class="num">0</span>]
+
+<span class="cm"># Enumerate et zip</span>
+<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(lst): ...
+<span class="kw">for</span> a, b <span class="kw">in</span> <span class="fn">zip</span>(l1, l2): ...</pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Fichiers & Exceptions</div>
+      <pre><span class="kw">with</span> <span class="fn">open</span>(<span class="str">'f.txt'</span>, <span class="str">'r'</span>) <span class="kw">as</span> f:
+    contenu = f.<span class="fn">read</span>()
+
+<span class="kw">try</span>:
+    x = <span class="fn">int</span>(<span class="str">'abc'</span>)
+<span class="kw">except</span> ValueError <span class="kw">as</span> e:
+    <span class="fn">print</span>(e)
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="str">'toujours'</span>)</pre>
+    </div>
+  </div>
+
+  <div class="cheat-content" id="tab-sql">
+    <div class="cheat-block">
+      <div class="cheat-block-header">Requêtes de base</div>
+      <pre><span class="kw">SELECT</span> col1, col2
+  <span class="kw">FROM</span> table
+ <span class="kw">WHERE</span> condition
+ <span class="kw">ORDER BY</span> col1 <span class="kw">DESC</span>
+ <span class="kw">LIMIT</span> <span class="num">10</span>;
+
+<span class="kw">SELECT DISTINCT</span> ville <span class="kw">FROM</span> clients;
+<span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> commandes;</pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Jointures</div>
+      <pre><span class="cm">-- INNER JOIN</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> A
+<span class="kw">INNER JOIN</span> B <span class="kw">ON</span> A.id = B.a_id;
+
+<span class="cm">-- LEFT JOIN</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> A
+<span class="kw">LEFT JOIN</span> B <span class="kw">ON</span> A.id = B.a_id;
+
+<span class="cm">-- Jointure multiple</span>
+<span class="kw">FROM</span> A <span class="kw">JOIN</span> B <span class="kw">ON</span> ...
+        <span class="kw">JOIN</span> C <span class="kw">ON</span> ...</pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Agrégation</div>
+      <pre><span class="kw">SELECT</span> dept,
+       <span class="fn">COUNT</span>(*) <span class="kw">AS</span> nb,
+       <span class="fn">AVG</span>(salaire),
+       <span class="fn">MAX</span>(salaire)
+  <span class="kw">FROM</span> employes
+ <span class="kw">GROUP BY</span> dept
+<span class="kw">HAVING COUNT</span>(*) > <span class="num">5</span>;</pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">DDL & DML</div>
+      <pre><span class="kw">CREATE TABLE</span> users (
+  id   <span class="fn">INT PRIMARY KEY</span>,
+  nom  <span class="fn">VARCHAR</span>(<span class="num">100</span>)
+);
+
+<span class="kw">INSERT INTO</span> users <span class="kw">VALUES</span> (<span class="num">1</span>,<span class="str">'Ali'</span>);
+<span class="kw">UPDATE</span> users <span class="kw">SET</span> nom=<span class="str">'Sara'</span>
+ <span class="kw">WHERE</span> id=<span class="num">1</span>;
+<span class="kw">DELETE FROM</span> users <span class="kw">WHERE</span> id=<span class="num">1</span>;</pre>
+    </div>
+  </div>
+
+  <div class="cheat-content" id="tab-git">
+    <div class="cheat-block">
+      <div class="cheat-block-header">Commandes essentielles</div>
+      <pre><span class="kw">git init</span>              <span class="cm"># initialiser</span>
+<span class="kw">git clone</span> &lt;url&gt;       <span class="cm"># cloner repo</span>
+<span class="kw">git status</span>            <span class="cm"># état des fichiers</span>
+<span class="kw">git add</span> .             <span class="cm"># indexer tout</span>
+<span class="kw">git commit</span> -m <span class="str">"msg"</span>  <span class="cm"># valider</span>
+<span class="kw">git push</span> origin main  <span class="cm"># envoyer</span>
+<span class="kw">git pull</span>              <span class="cm"># récupérer</span></pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Branches</div>
+      <pre><span class="kw">git branch</span>            <span class="cm"># lister branches</span>
+<span class="kw">git branch</span> feature    <span class="cm"># créer</span>
+<span class="kw">git checkout</span> feature  <span class="cm"># basculer</span>
+<span class="kw">git checkout</span> -b feat  <span class="cm"># créer + basculer</span>
+<span class="kw">git merge</span> feature     <span class="cm"># fusionner</span>
+<span class="kw">git branch</span> -d feat    <span class="cm"># supprimer</span>
+<span class="kw">git rebase</span> main       <span class="cm"># rebaser</span></pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Historique & Annulation</div>
+      <pre><span class="kw">git log</span> --oneline     <span class="cm"># historique compact</span>
+<span class="kw">git diff</span>              <span class="cm"># différences</span>
+<span class="kw">git stash</span>             <span class="cm"># sauvegarder WIP</span>
+<span class="kw">git stash pop</span>         <span class="cm"># restaurer WIP</span>
+<span class="kw">git reset</span> --soft HEAD~1 <span class="cm"># annuler commit</span>
+<span class="kw">git revert</span> &lt;hash&gt;    <span class="cm"># inverser commit</span></pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Configuration & Remote</div>
+      <pre><span class="kw">git config</span> --global user.name <span class="str">"Nom"</span>
+<span class="kw">git config</span> --global user.email <span class="str">"@"</span>
+<span class="kw">git remote add</span> origin &lt;url&gt;
+<span class="kw">git remote</span> -v
+<span class="kw">git fetch</span> origin
+<span class="kw">git tag</span> v1.0          <span class="cm"># créer un tag</span></pre>
+    </div>
+  </div>
+
+  <div class="cheat-content" id="tab-reseau">
+    <div class="cheat-block">
+      <div class="cheat-block-header">Commandes réseau Linux</div>
+      <pre><span class="kw">ping</span> 8.8.8.8          <span class="cm"># tester hôte</span>
+<span class="kw">traceroute</span> google.com <span class="cm"># tracer route</span>
+<span class="kw">nslookup</span> domain       <span class="cm"># résolution DNS</span>
+<span class="kw">dig</span> domain +short      <span class="cm"># infos DNS</span>
+<span class="kw">ifconfig</span> / <span class="kw">ip addr</span>   <span class="cm"># interfaces</span>
+<span class="kw">netstat</span> -tulnp        <span class="cm"># connexions actives</span>
+<span class="kw">ss</span> -tulnp             <span class="cm"># version moderne</span></pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Ports importants</div>
+      <pre><span class="num">21</span>   FTP
+<span class="num">22</span>   SSH
+<span class="num">25</span>   SMTP
+<span class="num">53</span>   DNS
+<span class="num">80</span>   HTTP
+<span class="num">443</span>  HTTPS
+<span class="num">3306</span> MySQL
+<span class="num">5432</span> PostgreSQL
+<span class="num">6379</span> Redis
+<span class="num">27017</span> MongoDB</pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Adressage IPv4 CIDR</div>
+      <pre">/8   → 255.0.0.0
+/16  → 255.255.0.0
+/24  → 255.255.255.0
+/25  → 255.255.255.128
+/26  → 255.255.255.192
+/27  → 255.255.255.224
+/28  → 255.255.255.240
+/30  → 255.255.255.252</pre>
+    </div>
+    <div class="cheat-block">
+      <div class="cheat-block-header">Modèle OSI résumé</div>
+      <pre><span class="num">7</span> Application  HTTP, FTP, DNS
+<span class="num">6</span> Présentation SSL/TLS, MIME
+<span class="num">5</span> Session      NetBIOS, RPC
+<span class="num">4</span> Transport    TCP, UDP
+<span class="num">3</span> Réseau       IP, ICMP
+<span class="num">2</span> Liaison      Ethernet, Wi-Fi
+<span class="num">1</span> Physique     Câbles, fibres</pre>
+    </div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- ── QUIZ ── -->
+<section id="quiz">
+  <span class="section-tag">// Entraînement</span>
+  <h2>Quiz Interactif</h2>
+  <p class="section-sub">Testez vos connaissances sur tous les domaines du programme.</p>
+
+  <div class="quiz-container">
+    <div id="quizContent">
+      <p class="quiz-q" id="quizQuestion"></p>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+      <div class="quiz-nav">
+        <span class="quiz-counter" id="quizCounter"></span>
+        <button class="btn-quiz" id="quizNextBtn" onclick="nextQuestion()" disabled>Question suivante →</button>
+      </div>
+    </div>
+    <div id="quizResult" style="display:none; text-align:center; padding:2rem 0;">
+      <div style="font-size:3rem; margin-bottom:1rem;" id="resultEmoji"></div>
+      <h3 style="font-size:1.5rem; margin-bottom:0.5rem;" id="resultScore"></h3>
+      <p style="color:var(--text2); margin-bottom:1.5rem;" id="resultMsg"></p>
+      <button class="btn-quiz" onclick="restartQuiz()">Recommencer ↺</button>
+    </div>
+  </div>
+</section>
+
+<hr class="full-sep">
+
+<!-- ── ROADMAP ── -->
+<section id="roadmap">
+  <span class="section-tag">// Parcours recommandé</span>
+  <h2>Roadmap étudiant IT</h2>
+  <p class="section-sub">Un parcours progressif de la 1ère année jusqu'à l'insertion professionnelle.</p>
+
+  <div class="timeline">
+    <div class="tl-item" style="--c:#4f9eff"><div class="tl-dot"></div>
+      <p class="tl-year">Semestre 1 — Fondations</p>
+      <h4>Algorithmique & Mathématiques Informatiques</h4>
+      <p>Logique, pseudo-code, structures de données de base, algèbre booléenne et bases de la programmation en C.</p>
+    </div>
+    <div class="tl-item" style="--c:#7c3aed"><div class="tl-dot"></div>
+      <p class="tl-year">Semestre 2 — Systèmes & Réseaux</p>
+      <h4>Linux, OS et premiers pas en réseau</h4>
+      <p>Système de fichiers, processus, commandes shell, modèle OSI, TCP/IP et adressage IPv4.</p>
+    </div>
+    <div class="tl-item" style="--c:#10b981"><div class="tl-dot"></div>
+      <p class="tl-year">Semestre 3 — Développement</p>
+      <h4>Web, Bases de données & POO</h4>
+      <p>HTML/CSS/JS, SQL, conception BDD (MCD/MLD), programmation orientée objet en Python ou Java.</p>
+    </div>
+    <div class="tl-item" style="--c:#f59e0b"><div class="tl-dot"></div>
+      <p class="tl-year">Semestre 4 — Spécialisation</p>
+      <h4>Réseaux avancés & Sécurité</h4>
+      <p>Routage dynamique, VLAN, VPN, cryptographie, OWASP, pare-feu et premières notions télécom.</p>
+    </div>
+    <div class="tl-item" style="--c:#ef4444"><div class="tl-dot"></div>
+      <p class="tl-year">Semestre 5 — Cloud & IA</p>
+      <h4>Cloud, Docker & Intelligence Artificielle</h4>
+      <p>Conteneurisation, AWS, machine learning avec Python, Kubernetes et architecture microservices.</p>
+    </div>
+    <div class="tl-item" style="--c:#06b6d4"><div class="tl-dot"></div>
+      <p class="tl-year">Semestre 6 — Projet & Stage</p>
+      <h4>Projet de fin d'études & Insertion pro</h4>
+      <p>Mémoire technique, génie logiciel (UML, Agile, Git), stage en entreprise et préparation certifications (CCNA, AWS, LPIC).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <a href="#" class="logo">&lt;<span>Info</span>Study/&gt;</a>
+  <p>© 2025 InfoStudy — Plateforme étudiants IT &amp; Télécoms</p>
+  <div class="footer-links">
+    <a href="#modules">Modules</a>
+    <a href="#cheatsheet">Cheatsheet</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#roadmap">Roadmap</a>
+  </div>
+</footer>
+
+<script>
+// ── MODULES TOGGLE ──
+function toggleDetail(id) {
+  const panel = document.getElementById('detail-' + id);
+  const allPanels = document.querySelectorAll('.detail-panel');
+  allPanels.forEach(p => { if (p.id !== 'detail-' + id) p.classList.remove('open'); });
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  }
+}
+
+// ── SEARCH ──
+function filterModules() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.module-card').forEach(card => {
+    const txt = card.textContent.toLowerCase();
+    card.style.display = txt.includes(q) ? '' : 'none';
+  });
+}
+
+// ── CHEATSHEET TABS ──
+function switchTab(name) {
+  document.querySelectorAll('.cheat-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.cheat-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ── QUIZ ──
+const quizData = [
+  { q: "Combien de couches contient le modèle OSI ?", opts: ["4","5","7","9"], ans: 2, exp: "Le modèle OSI compte 7 couches : Physique, Liaison, Réseau, Transport, Session, Présentation, Application." },
+  { q: "Quelle commande Python permet d'ouvrir un fichier en lecture ?", opts: ["read('f.txt')","open('f.txt', 'r')","file.open('f.txt')","load('f.txt')"], ans: 1, exp: "open() est la fonction built-in Python. Le mode 'r' signifie lecture (read)." },
+  { q: "Quel protocole opère au niveau de la couche Transport ?", opts: ["IP","HTTP","TCP","Ethernet"], ans: 2, exp: "TCP (et UDP) opèrent en couche 4 (Transport). IP est en couche 3, HTTP en couche 7, Ethernet en couche 2." },
+  { q: "Que signifie ACID en bases de données ?", opts: ["Atomicity, Consistency, Isolation, Durability","Aggregate, Commit, Index, Data","Application, Cloud, Integration, Database","Asynchronous, Cached, Incremental, Distributed"], ans: 0, exp: "ACID garantit la fiabilité des transactions : Atomicité, Cohérence, Isolation, Durabilité." },
+  { q: "Quelle est la différence entre un processus et un thread ?", opts: ["Il n'y a aucune différence","Un thread a son propre espace mémoire","Un processus partage la mémoire, un thread non","Un thread est une unité légère au sein d'un processus"], ans: 3, exp: "Un thread s'exécute à l'intérieur d'un processus et partage son espace mémoire avec les autres threads du même processus." },
+  { q: "Quel port est utilisé par défaut pour HTTPS ?", opts: ["80","8080","443","22"], ans: 2, exp: "HTTPS utilise le port 443. HTTP utilise le port 80, SSH le port 22." },
+  { q: "Quelle commande Git permet de valider des modifications ?", opts: ["git save","git push","git commit","git upload"], ans: 2, exp: "git commit enregistre les modifications indexées dans l'historique local du dépôt." },
+  { q: "En Python, quelle structure utilise-t-on pour stocker des paires clé-valeur ?", opts: ["Liste","Tuple","Set","Dictionnaire"], ans: 3, exp: "Le dictionnaire (dict) stocke des paires clé-valeur : {'clé': 'valeur'}. C'est l'équivalent d'une hashmap." },
+  { q: "Qu'est-ce que le masque /24 en notation CIDR ?", opts: ["255.0.0.0","255.255.0.0","255.255.255.0","255.255.255.128"], ans: 2, exp: "/24 correspond à 255.255.255.0, soit 24 bits à 1. Il permet d'adresser 254 hôtes (256-2)." },
+  { q: "Quel algorithme de chiffrement est asymétrique ?", opts: ["AES","DES","RSA","Blowfish"], ans: 2, exp: "RSA est un algorithme asymétrique utilisant une paire clé publique/clé privée. AES, DES et Blowfish sont symétriques." },
+];
+
+let currentQ = 0, score = 0, answered = false, order = [];
+
+function shuffle(arr) { return arr.slice().sort(() => Math.random()-0.5); }
+
+function startQuiz() {
+  order = shuffle([...Array(quizData.length).keys()]).slice(0,8);
+  currentQ = 0; score = 0; answered = false;
+  document.getElementById('quizContent').style.display = '';
+  document.getElementById('quizResult').style.display = 'none';
+  loadQuestion();
+}
+
+function loadQuestion() {
+  answered = false;
+  document.getElementById('quizNextBtn').disabled = true;
+  const data = quizData[order[currentQ]];
+  document.getElementById('quizQuestion').textContent = data.q;
+  document.getElementById('quizCounter').textContent = `Question ${currentQ+1} / ${order.length}`;
+  const fb = document.getElementById('quizFeedback');
+  fb.className = 'quiz-feedback'; fb.textContent = '';
+  const opts = document.getElementById('quizOptions');
+  opts.innerHTML = '';
+  data.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-opt';
+    div.innerHTML = `<span class="opt-letter">${'ABCD'[i]}</span>${opt}`;
+    div.onclick = () => selectAnswer(i, data.ans, data.exp);
+    opts.appendChild(div);
+  });
+}
+
+function selectAnswer(chosen, correct, explanation) {
+  if (answered) return;
+  answered = true;
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts[correct].classList.add('correct');
+  if (chosen !== correct) opts[chosen].classList.add('wrong');
+  else score++;
+  const fb = document.getElementById('quizFeedback');
+  fb.textContent = (chosen === correct ? '✓ Correct ! ' : '✗ Incorrect. ') + explanation;
+  fb.className = 'quiz-feedback show ' + (chosen === correct ? 'ok' : 'ko');
+  document.getElementById('quizNextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= order.length) showResult();
+  else loadQuestion();
+}
+
+function showResult() {
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('quizResult').style.display = 'block';
+  const pct = Math.round(score/order.length*100);
+  let emoji = '😅', msg = 'Continue à réviser, tu vas y arriver !';
+  if (pct >= 80) { emoji = '🎉'; msg = 'Excellent ! Tu maîtrises bien le programme.'; }
+  else if (pct >= 60) { emoji = '😊'; msg = 'Bon score ! Quelques points à revoir.'; }
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultScore').textContent = `${score} / ${order.length} — ${pct}%`;
+  document.getElementById('resultMsg').textContent = msg;
+}
+
+function restartQuiz() { startQuiz(); }
+
+// ── ANIMATIONS SCROLL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ── HAMBURGER ──
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  if (!links) return;
+  links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+  links.style.flexDirection = 'column';
+  links.style.position = 'fixed';
+  links.style.top = '64px';
+  links.style.left = '0'; links.style.right = '0';
+  links.style.background = 'var(--bg2)';
+  links.style.padding = '1rem 2rem';
+  links.style.gap = '1rem';
+}
+
+// INIT
+startQuiz();
+</script>
+</body>
+</html>
